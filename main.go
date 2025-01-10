@@ -1,9 +1,9 @@
 package main
 
 import (
-	"go-api/internal/db"
-	"go-api/internal/todo"
-	"go-api/internal/transport"
+	"github.com/iJosef/go-todo-api/internal/db"
+	"github.com/iJosef/go-todo-api/internal/todo"
+	"github.com/iJosef/go-todo-api/internal/transport"
 	"log"
 )
 

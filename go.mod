@@ -1,4 +1,4 @@
-module go-api
+module github.com/iJosef/go-todo-api
 
 go 1.23
 

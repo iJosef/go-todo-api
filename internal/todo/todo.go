@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"go-api/internal/db"
+	"github.com/iJosef/go-todo-api/internal/db"
 	"strings"
 )
 

@@ -2,7 +2,7 @@ package transport
 
 import (
 	"encoding/json"
-	"go-api/internal/todo"
+	"github.com/iJosef/go-todo-api/internal/todo"
 	"log"
 	"net/http"
 )
