@@ -60,6 +60,12 @@ func (db *DB) GetAllItems(ctx context.Context) ([]Item, error) {
 	return items, nil
 }
 
+func (db *DB) DeleteItem(ctx context.Context, id int) error {
+	query := `DELETE FROM todo_items WHERE id = $1`
+	_, err := db.pool.Exec(ctx, query, id)
+	return err
+}
+
 func (db *DB) Close() {
 	db.pool.Close()
 }

@@ -12,6 +12,11 @@ type MockDB struct {
 	items []db.Item
 }
 
+func (m *MockDB) DeleteItem(_ context.Context, id int) error {
+	m.items = append(m.items[:id], m.items[id+1:]...)
+	return nil
+}
+
 func (m *MockDB) InsertItem(_ context.Context, item db.Item) error {
 	m.items = append(m.items, item)
 	return nil

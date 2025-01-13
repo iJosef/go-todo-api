@@ -2,6 +2,7 @@ package todo
 
 import (
 	"context"
+	"database/sql"
 	"errors"
 	"fmt"
 	"github.com/iJosef/go-todo-api/internal/db"
@@ -16,6 +17,7 @@ type Item struct {
 type Manager interface {
 	InsertItem(ctx context.Context, item db.Item) error
 	GetAllItems(ctx context.Context) ([]db.Item, error)
+	DeleteItem(ctx context.Context, id int) error
 }
 
 type Service struct {
@@ -63,21 +65,17 @@ func (svc *Service) GetAll() ([]Item, error) {
 	return results, nil
 }
 
-//func (svc *Service) Delete(id int) error {
-//	items, err := svc.GetAll()
-//	if err != nil {
-//		return nil, fmt.Errorf("failed to read from db: %w", err)
-//	}
-//
-//	for i, t := range items {
-//		if t.id == id {
-//			items = append(items[:i], items[i+1:]...)
-//			return nil
-//		}
-//	}
-//
-//	return errors.New("todo not found")
-//}
+func (svc *Service) Delete(id int) error {
+	err := svc.db.DeleteItem(context.Background(), id)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return errors.New("todo not found")
+		}
+		return fmt.Errorf("failed to delete item from db: %w", err)
+	}
+
+	return nil
+}
 
 func (svc *Service) Search(query string) ([]string, error) {
 	items, err := svc.GetAll()

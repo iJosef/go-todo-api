@@ -5,6 +5,8 @@ import (
 	"github.com/iJosef/go-todo-api/internal/todo"
 	"log"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
 type TodoItem struct {
@@ -20,10 +22,6 @@ func NewServer(todoSvc *todo.Service) *Server {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("GET /todo", func(w http.ResponseWriter, r *http.Request) {
-		//_, err := w.Write([]byte("Hello World"))
-		//if err != nil {
-		//	log.Fatal(err)
-		//}
 		todoItems, err := todoSvc.GetAll()
 		if err != nil {
 			log.Println(err)
@@ -57,26 +55,26 @@ func NewServer(todoSvc *todo.Service) *Server {
 		return
 	})
 
-	//mux.HandleFunc("DELETE /todo/{id}", func(writer http.ResponseWriter, request *http.Request) {
-	//	if request.Method != http.MethodDelete {
-	//		http.Error(writer, "Invalid request method", http.StatusMethodNotAllowed)
-	//		return
-	//	}
-	//
-	//	idStr := strings.TrimPrefix(request.URL.Path, "/todo/")
-	//	id, err := strconv.Atoi(idStr)
-	//	if err != nil {
-	//		http.Error(writer, "Invalid ID format", http.StatusBadRequest)
-	//		return
-	//	}
-	//
-	//	err = todoSvc.Delete(id)
-	//	if err != nil {
-	//		writer.WriteHeader(http.StatusBadRequest)
-	//	}
-	//	writer.WriteHeader(http.StatusOK)
-	//	return
-	//})
+	mux.HandleFunc("DELETE /todo/{id}", func(writer http.ResponseWriter, request *http.Request) {
+		if request.Method != http.MethodDelete {
+			http.Error(writer, "Invalid request method", http.StatusMethodNotAllowed)
+			return
+		}
+
+		idStr := strings.TrimPrefix(request.URL.Path, "/todo/")
+		id, err := strconv.Atoi(idStr)
+		if err != nil {
+			http.Error(writer, "Invalid ID format", http.StatusBadRequest)
+			return
+		}
+
+		err = todoSvc.Delete(id)
+		if err != nil {
+			writer.WriteHeader(http.StatusBadRequest)
+		}
+		writer.WriteHeader(http.StatusOK)
+		return
+	})
 
 	mux.HandleFunc("GET /search", func(writer http.ResponseWriter, request *http.Request) {
 		query := request.URL.Query().Get("q")
